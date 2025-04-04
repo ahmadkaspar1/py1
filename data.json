@@ -1,0 +1,36 @@
+{
+    "questions": {
+        "Arabic": [
+            {
+                "keywords": ["مين صممك", "مين طورك", "من هو مصممك", "من هو مطورك"],
+                "response": "أحمد، صهيب، أيمن، وعبدالله"
+            },
+            {
+                "keywords": ["فريق سيمي كولون", "فريق semicolon", "سيمي كولن تيم", "فريق سيميكولون"],
+                "response": "فريق Semicolon هو فريق طلابي في الجامعة الأردنية تحديدا في كلية الايتي، متخصص في برمجة الأردوينو والروبوتات."
+            },
+            {
+                "keywords": ["شو اسمك", "اسمك شو", "ما هو اسمك", "اسمك"],
+                "response": "اسمي صخر."
+            }
+        ],
+        "English": [
+            {
+                "keywords": ["who's your designer", "who's your developer", "who is your developer", "who is your designer"],
+                "response": "Ahmad, Suhaib, Ayman, and Abdullah"
+            },
+            {
+                "keywords": ["semicolon team", "semi colon team"],
+                "response": "Semicolon Team is a student team at the University of Jordan, specializing in Arduino programming and robotics."
+            },
+            {
+                "keywords": ["what is your name", "your name", "who are you"],
+                "response": "My name is Doctor Stone."
+            }
+        ]
+    },
+    "bot_names": {
+        "Arabic": ["صخر"],
+        "English": ["doctor stone", "dr stone"]
+    }
+}

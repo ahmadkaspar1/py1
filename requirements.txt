@@ -1,0 +1,9 @@
+pyaudio
+vosk
+keyboard
+arabic-reshaper
+python-bidi
+requests
+gtts
+playsound
+pyttsx3

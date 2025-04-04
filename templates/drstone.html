@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Dr. Stone</title>
+</head>
+<body>
+    <header>
+        <a href="/" class="logo">SEMICOLON</a>
+        <nav class="navigation">
+            <a href="/">Home</a>
+            <a href="/drstone">Dr. Stone</a>
+            <a href="chat.html">Semicolon Chat</a>
+            <a href="mailto:">Contact</a>
+        </nav>
+    </header>
+
+    <section class="main">
+        <h2>Welcome to <span>Dr. Stone</span></h2>
+        <p>This is the Dr. Stone control panel.</p>
+
+        <!-- أزرار التحكم -->
+        <div id="controls">
+            <button id="start-btn" class="main-btn" onclick="sendCommand('start')">Start</button>
+            <button id="stop-btn" class="main-btn" onclick="sendCommand('stop')" disabled>Stop</button>
+            <button id="restart-btn" class="main-btn" onclick="sendCommand('restart')" style="display: none;">Restart</button>
+        </div>
+
+        <!-- منطقة اختيار اللغة -->
+        <div id="language-selection" style="display: none;">
+            <h4>Select Language:</h4>
+            <button class="lang-btn main-btn" onclick="sendCommand('english')">English</button>
+            <button class="lang-btn main-btn" onclick="sendCommand('arabic')">Arabic</button>
+        </div>
+
+        <!-- منطقة اختيار الوضع -->
+      
+
+        <!-- منطقة عرض الرسائل -->
+        <div id="response-container"></div>
+    </section>
+
+    <script>
+        // إرسال الأوامر إلى الخادم
+        function sendCommand(command) {
+            fetch('/command', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `command=${command}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    updateUI(command);
+                } else {
+                    alert(data.message); // عرض رسالة الخطأ
+                }
+            });
+        }
+
+        // تحديث واجهة المستخدم بناءً على الأمر
+        function updateUI(command) {
+            const startBtn = document.getElementById('start-btn');
+            const stopBtn = document.getElementById('stop-btn');
+            const restartBtn = document.getElementById('restart-btn');
+            const languageSelection = document.getElementById('language-selection');
+            const modeSelection = document.getElementById('mode-selection');
+
+            if (command === 'start') {
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+                restartBtn.style.display = 'inline-block';
+                languageSelection.style.display = 'block';
+            } else if (['english', 'arabic'].includes(command)) {
+                languageSelection.style.display = 'none';
+                modeSelection.style.display = 'block';
+            } else if (['drstone', 'assistant'].includes(command)) {
+                modeSelection.style.display = 'none';
+            } else if (command === 'stop') {
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+                restartBtn.style.display = 'none';
+                languageSelection.style.display = 'none';
+                modeSelection.style.display = 'none';
+            } else if (command === 'restart') {
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+                restartBtn.style.display = 'none';
+                languageSelection.style.display = 'block';
+                modeSelection.style.display = 'none';
+            }
+        }
+
+        // تحديث الرسائل من الخادم
+        function updateMessages() {
+            fetch('/get_messages')
+            .then(response => response.json())
+            .then(data => {
+                const messagesDiv = document.getElementById('response-container');
+                messagesDiv.innerHTML = ''; // مسح الرسائل الحالية
+                data.messages.forEach(message => {
+                    // تجاهل الرسائل التقنية
+                    if (!message.includes("switched") && !message.includes("started") && !message.includes("stopped")) {
+                        const p = document.createElement('p');
+                        p.textContent = message;
+                        messagesDiv.appendChild(p);
+                    }
+                });
+                messagesDiv.scrollTop = messagesDiv.scrollHeight; // التمرير للأسفل
+            });
+        }
+
+        // تحديث الرسائل كل ثانية
+        setInterval(updateMessages, 1000);
+    </script>
+</body>
+</html>
